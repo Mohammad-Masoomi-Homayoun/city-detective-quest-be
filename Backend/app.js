@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -21,12 +22,11 @@ app.use("/user", userRouter);
 const admin = require("./routes/admin");
 app.use("/admin", admin);
 
-require("dotenv").config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, (err) => {
   if (err) {
     console.log("Error starting server: " + err);
   } else {
-    console.log("Listening on http://localhost:8000");
+    console.log(`Listening on http://localhost:${PORT}`);
   }
 });
