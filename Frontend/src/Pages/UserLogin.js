@@ -19,7 +19,7 @@ const UserLogin = () => {
       password,
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/user/login`, enteredDetails)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/user/login`, enteredDetails)
       .then((res) => {
         const userData = { ...res.data.userData, token: res.data.token };
         localStorage.setItem("currentUser", JSON.stringify(userData));

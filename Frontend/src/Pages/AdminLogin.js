@@ -14,7 +14,7 @@ const AdminLogin = () => {
   const adminLoginHandler = async (email, password) => {
     setError(null);
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/login`, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/admin/login`, {
         email,
         password,
       })

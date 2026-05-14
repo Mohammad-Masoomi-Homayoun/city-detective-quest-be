@@ -35,7 +35,7 @@ const Home = (props) => {
       .then((data) => {
         axios
           .post(
-            `${process.env.REACT_APP_BACKEND_URL}/user/addImage`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/user/addImage`,
             {
               url: data.secure_url,
               email: userData.email,

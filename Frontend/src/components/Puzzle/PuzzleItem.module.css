@@ -1,0 +1,69 @@
+.item {
+  padding: 1.25rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badgeType {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  background: #2196f3;
+  color: white;
+  font-weight: 500;
+}
+
+.badgeStatus {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  background: #607d8b;
+  color: white;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.description {
+  margin: 0.75rem 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 0.75rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}

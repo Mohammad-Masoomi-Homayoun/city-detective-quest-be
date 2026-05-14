@@ -19,7 +19,7 @@ function AdminHome() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/admin/allUsers`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/api/admin/allUsers`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${adminToken}`,
@@ -40,7 +40,7 @@ function AdminHome() {
 
   function getAllUsers() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/admin/allUsers`, {
+      .get(`${process.env.REACT_APP_BACKEND_URL}/api/admin/allUsers`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${adminToken}`,
@@ -68,7 +68,7 @@ function AdminHome() {
   const addUserHandler = async (userData) => {
     setError(null);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/addUser`, userData, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/admin/addUser`, userData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${adminToken}`,

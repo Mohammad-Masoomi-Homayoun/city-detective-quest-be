@@ -16,11 +16,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const userRouter = require("./routes/user");
-app.use("/user", userRouter);
-
-const admin = require("./routes/admin");
-app.use("/admin", admin);
+const apiRouter = require("./routes");
+app.use("/api", apiRouter);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, (err) => {

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { currentUserActions } from "./store/current-user";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AdminDashboard from "./Pages/AdminDashboard";
+import PuzzleDashboard from "./Pages/PuzzleDashboard";
 
 function App() {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function App() {
         />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/puzzles" element={<PuzzleDashboard />} />
       </Routes>
     </BrowserRouter>
   );

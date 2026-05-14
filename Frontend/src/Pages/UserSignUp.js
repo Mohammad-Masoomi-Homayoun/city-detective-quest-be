@@ -21,7 +21,7 @@ const UserSignUp = () => {
 
   const addUserHandler = (userData) => {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/user/signup`, userData)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/user/signup`, userData)
       .then((result) => {
         if (result.status === 200) {
           userAlert();

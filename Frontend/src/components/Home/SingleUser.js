@@ -40,7 +40,7 @@ function SingleUser({ user, refreshUsers }) {
       if (result.isConfirmed) {
         axios
           .delete(
-            `${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser/${user._id}`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/admin/deleteuser/${user._id}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -77,7 +77,7 @@ function SingleUser({ user, refreshUsers }) {
     setEdit(!edit);
     axios
       .put(
-        `${process.env.REACT_APP_BACKEND_URL}/admin/edituser/${user._id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/admin/edituser/${user._id}`,
         {
           name,
         },
