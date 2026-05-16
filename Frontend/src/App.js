@@ -12,6 +12,7 @@ import AdminDashboard from "./Pages/AdminDashboard";
 import PuzzleDashboard from "./Pages/PuzzleDashboard";
 import InvestigationSiteDashboard from "./Pages/InvestigationSiteDashboard";
 import QuestDashboard from "./Pages/QuestDashboard";
+import UserManagement from "./Pages/UserManagement";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ function App() {
         />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/puzzles" element={<PuzzleDashboard />} />
         <Route path="/admin/investigation-sites" element={<InvestigationSiteDashboard />} />
         <Route path="/admin/quests" element={<QuestDashboard />} />
