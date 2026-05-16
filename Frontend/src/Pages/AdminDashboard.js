@@ -17,8 +17,9 @@ const AdminDashboard = () => {
   return (
     <>
       <MainHeader onLogout={logoutHandler} />
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem", gap: "1rem" }}>
         <Button onClick={() => navigate("/admin/puzzles")}>Manage Puzzles</Button>
+        <Button onClick={() => navigate("/admin/investigation-sites")}>Investigation Sites</Button>
       </div>
       <AdminHome />
     </>
