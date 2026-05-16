@@ -200,9 +200,13 @@ components:
 
     Quest:
       type: object
-      required: [puzzle, investigationSite]
+      required: [title, description, puzzle, investigationSite]
       properties:
         _id:
+          type: string
+        title:
+          type: string
+        description:
           type: string
         puzzle:
           oneOf:
@@ -877,8 +881,12 @@ paths:
           application/json:
             schema:
               type: object
-              required: [puzzle, investigationSite]
+              required: [title, description, puzzle, investigationSite]
               properties:
+                title:
+                  type: string
+                description:
+                  type: string
                 puzzle:
                   type: string
                   description: Puzzle ID
@@ -886,6 +894,8 @@ paths:
                   type: string
                   description: InvestigationSite ID
             example:
+              title: "Park Mystery Quest"
+              description: "Solve the cipher hidden in the park"
               puzzle: "6a07365a33fa258a152df58c"
               investigationSite: "6a07365a33fa258a152df590"
       responses:
@@ -951,6 +961,10 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                description:
+                  type: string
                 puzzle:
                   type: string
                   description: Puzzle ID

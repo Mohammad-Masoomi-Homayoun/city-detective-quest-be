@@ -40,22 +40,22 @@ const AdminDashboard = () => {
           <div style={cardStyle}>
             <h4 style={cardTitle}>👥 Users</h4>
             <p style={cardDesc}>Manage user accounts</p>
-            <Button onClick={() => navigate("/admin/users")}>Open</Button>
+            <Button onClick={() => navigate("/admin/users")}>Go</Button>
           </div>
           <div style={cardStyle}>
             <h4 style={cardTitle}>🧩 Puzzles</h4>
             <p style={cardDesc}>Create and manage puzzles</p>
-            <Button onClick={() => navigate("/admin/puzzles")}>Open</Button>
+            <Button onClick={() => navigate("/admin/puzzles")}>Go</Button>
           </div>
           <div style={cardStyle}>
             <h4 style={cardTitle}>📍 Investigation Sites</h4>
             <p style={cardDesc}>Manage investigation locations</p>
-            <Button onClick={() => navigate("/admin/investigation-sites")}>Open</Button>
+            <Button onClick={() => navigate("/admin/investigation-sites")}>Go</Button>
           </div>
           <div style={cardStyle}>
             <h4 style={cardTitle}>🗺️ Quests</h4>
             <p style={cardDesc}>Link puzzles to sites</p>
-            <Button onClick={() => navigate("/admin/quests")}>Open</Button>
+            <Button onClick={() => navigate("/admin/quests")}>Go</Button>
           </div>
         </div>
       </div>

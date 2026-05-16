@@ -9,7 +9,7 @@ const IndexPage = (props) => {
   return (
     <>
       <Card className={classes.home}>
-        <h1 className="my-4">User Management</h1>
+        <h1 className="my-4">City Detective Quest Back Office</h1>
         <Link to="/user/login">
           <Button className='m-2'>User LogIn</Button>
         </Link>
