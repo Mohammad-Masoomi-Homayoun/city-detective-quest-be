@@ -20,6 +20,7 @@ const AdminDashboard = () => {
       <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem", gap: "1rem" }}>
         <Button onClick={() => navigate("/admin/puzzles")}>Manage Puzzles</Button>
         <Button onClick={() => navigate("/admin/investigation-sites")}>Investigation Sites</Button>
+        <Button onClick={() => navigate("/admin/quests")}>Manage Quests</Button>
       </div>
       <AdminHome />
     </>

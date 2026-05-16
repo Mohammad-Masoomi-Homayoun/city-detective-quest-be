@@ -11,6 +11,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AdminDashboard from "./Pages/AdminDashboard";
 import PuzzleDashboard from "./Pages/PuzzleDashboard";
 import InvestigationSiteDashboard from "./Pages/InvestigationSiteDashboard";
+import QuestDashboard from "./Pages/QuestDashboard";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/puzzles" element={<PuzzleDashboard />} />
         <Route path="/admin/investigation-sites" element={<InvestigationSiteDashboard />} />
+        <Route path="/admin/quests" element={<QuestDashboard />} />
       </Routes>
     </BrowserRouter>
   );
