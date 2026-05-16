@@ -8,6 +8,8 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function QuestForm({ onSubmit, onCancel, initialData, token }) {
   const [puzzles, setPuzzles] = useState([]);
   const [sites, setSites] = useState([]);
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [description, setDescription] = useState(initialData?.description || "");
   const [selectedPuzzle, setSelectedPuzzle] = useState(
     initialData?.puzzle?._id || initialData?.puzzle || ""
   );
@@ -30,6 +32,8 @@ function QuestForm({ onSubmit, onCancel, initialData, token }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
+      title,
+      description,
       puzzle: selectedPuzzle,
       investigationSite: selectedSite,
     });
@@ -38,6 +42,27 @@ function QuestForm({ onSubmit, onCancel, initialData, token }) {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <h3>{initialData ? "Edit Quest" : "Create New Quest"}</h3>
+
+      <div className={styles.field}>
+        <label htmlFor="quest-title">Title *</label>
+        <input
+          id="quest-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label htmlFor="quest-description">Description *</label>
+        <textarea
+          id="quest-description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+          required
+        />
+      </div>
 
       <div className={styles.field}>
         <label htmlFor="quest-puzzle">Puzzle *</label>

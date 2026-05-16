@@ -10,8 +10,13 @@ function QuestItem({ quest, onEdit, onDelete }) {
   return (
     <Card className={styles.item}>
       <div className={styles.header}>
-        <h4 className={styles.title}>Quest</h4>
+        <h4 className={styles.title}>{quest.title || "Quest"}</h4>
       </div>
+      {quest.description && (
+        <p style={{ color: "#555", fontSize: "0.9rem", margin: "0.25rem 0 0.75rem" }}>
+          {quest.description}
+        </p>
+      )}
       <div className={styles.details}>
         <div className={styles.section}>
           <span className={styles.label}>🧩 Puzzle:</span>

@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 
 const questSchema = new mongoose.Schema(
   {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
     puzzle: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Puzzle",
