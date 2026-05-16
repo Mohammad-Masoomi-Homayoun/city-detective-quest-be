@@ -3,6 +3,7 @@ import AdminHome from "../components/Home/AdminHome";
 import { useDispatch } from "react-redux";
 import MainHeader from "../components/MainHeader/MainHeader";
 import { adminSliceActions } from "../store/admin";
+import Button from "../components/UI/Button/Button";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -16,6 +17,9 @@ const AdminDashboard = () => {
   return (
     <>
       <MainHeader onLogout={logoutHandler} />
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+        <Button onClick={() => navigate("/admin/puzzles")}>Manage Puzzles</Button>
+      </div>
       <AdminHome />
     </>
   );
