@@ -1,5 +1,4 @@
 import Card from "../UI/Card/Card";
-import classes from "./Home.module.css";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Button from "../UI/Button/Button";
@@ -32,7 +31,7 @@ function AdminHome() {
         console.log(err);
         navigate("/admin/login");
       });
-  }, []);
+  }, [adminToken, navigate]);
 
   const changeHandler = (e) => {
     setSearchTerm(e.target.value);

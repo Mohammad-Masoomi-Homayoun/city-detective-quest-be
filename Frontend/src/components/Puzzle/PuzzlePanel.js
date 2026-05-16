@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../UI/Card/Card";
 import Button from "../UI/Button/Button";
@@ -16,7 +16,7 @@ function PuzzlePanel({ token }) {
   const [filterType, setFilterType] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState("");
 
-  const fetchPuzzles = () => {
+  const fetchPuzzles = useCallback(() => {
     const params = {};
     if (filterType) params.type = filterType;
     if (filterDifficulty) params.difficulty = filterDifficulty;
@@ -25,11 +25,11 @@ function PuzzlePanel({ token }) {
       .get(`${BACKEND_URL}/api/puzzle`, { params })
       .then((res) => setPuzzles(res.data))
       .catch((err) => console.log(err));
-  };
+  }, [filterType, filterDifficulty]);
 
   useEffect(() => {
     fetchPuzzles();
-  }, [filterType, filterDifficulty]);
+  }, [fetchPuzzles]);
 
   const handleCreate = (puzzleData) => {
     axios

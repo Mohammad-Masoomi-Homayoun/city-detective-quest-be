@@ -20,7 +20,7 @@ function SingleUser({ user, refreshUsers }) {
     return () => {
       window.removeEventListener("click", handleOuterClick);
     };
-  }, []);
+  }, [user.name]);
 
   const editHandler = (e) => {
     e.preventDefault();

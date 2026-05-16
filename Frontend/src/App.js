@@ -20,7 +20,7 @@ function App() {
         currentUserActions.alreadyLoggedIn(JSON.parse(alreadyLoggedInUser))
       );
     }
-  }, []);
+  }, [dispatch]);
   const currentUser = useSelector((state) => state.currentUser);
   return (
     <BrowserRouter>
