@@ -170,6 +170,59 @@ components:
         message:
           type: string
 
+    InvestigationSite:
+      type: object
+      required: [lat, lng, radius, title]
+      properties:
+        _id:
+          type: string
+        lat:
+          type: number
+          description: Latitude
+        lng:
+          type: number
+          description: Longitude
+        radius:
+          type: number
+          description: Radius in meters
+        status:
+          type: string
+          enum: [SOLVED, FAILED, OPEN]
+          default: OPEN
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Quest:
+      type: object
+      required: [puzzle, investigationSite]
+      properties:
+        _id:
+          type: string
+        puzzle:
+          oneOf:
+            - type: string
+              description: Puzzle ID (when creating/updating)
+            - $ref: "#/components/schemas/Puzzle"
+              description: Populated puzzle object (when reading)
+        investigationSite:
+          oneOf:
+            - type: string
+              description: InvestigationSite ID (when creating/updating)
+            - $ref: "#/components/schemas/InvestigationSite"
+              description: Populated site object (when reading)
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
 paths:
   # ─── Admin ───────────────────────────────────────────────
   /admin/login:
@@ -631,6 +684,322 @@ paths:
                     type: string
         "404":
           description: Puzzle not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ─── Investigation Site ──────────────────────────────────
+  /investigation-site:
+    get:
+      tags: [InvestigationSite]
+      summary: Get all investigation sites
+      description: Returns all investigation sites, optionally filtered by status.
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [SOLVED, FAILED, OPEN]
+      responses:
+        "200":
+          description: List of investigation sites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvestigationSite"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      tags: [InvestigationSite]
+      summary: Create a new investigation site
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvestigationSite"
+            example:
+              title: Central Park Mystery
+              lat: 35.6892
+              lng: 51.3890
+              radius: 150
+              status: OPEN
+      responses:
+        "201":
+          description: Site created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvestigationSite"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /investigation-site/{id}:
+    get:
+      tags: [InvestigationSite]
+      summary: Get an investigation site by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Site details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvestigationSite"
+        "404":
+          description: Site not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      tags: [InvestigationSite]
+      summary: Update an investigation site
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvestigationSite"
+      responses:
+        "200":
+          description: Site updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvestigationSite"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Site not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags: [InvestigationSite]
+      summary: Delete an investigation site
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Site deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Site not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ─── Quest ──────────────────────────────────────────────
+  /quest:
+    get:
+      tags: [Quest]
+      summary: Get all quests
+      description: Returns all quests with populated puzzle and investigation site data.
+      responses:
+        "200":
+          description: List of quests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Quest"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      tags: [Quest]
+      summary: Create a new quest
+      description: Links a puzzle to an investigation site.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [puzzle, investigationSite]
+              properties:
+                puzzle:
+                  type: string
+                  description: Puzzle ID
+                investigationSite:
+                  type: string
+                  description: InvestigationSite ID
+            example:
+              puzzle: "6a07365a33fa258a152df58c"
+              investigationSite: "6a07365a33fa258a152df590"
+      responses:
+        "201":
+          description: Quest created (with populated references)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /quest/{id}:
+    get:
+      tags: [Quest]
+      summary: Get a quest by ID
+      description: Returns a quest with populated puzzle and investigation site.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Quest details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quest"
+        "404":
+          description: Quest not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      tags: [Quest]
+      summary: Update a quest
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                puzzle:
+                  type: string
+                  description: Puzzle ID
+                investigationSite:
+                  type: string
+                  description: InvestigationSite ID
+      responses:
+        "200":
+          description: Quest updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Quest not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags: [Quest]
+      summary: Delete a quest
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Quest deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Quest not found
           content:
             application/json:
               schema:
