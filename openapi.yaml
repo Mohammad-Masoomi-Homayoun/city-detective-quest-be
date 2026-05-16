@@ -1,0 +1,637 @@
+openapi: 3.0.3
+info:
+  title: City Detective Quest API
+  description: Backend API for the City Detective Quest application — user management and puzzle CRUD.
+  version: 1.0.0
+  contact:
+    name: Mohammad Masoomi
+
+servers:
+  - url: https://city-detective-quest-be.vercel.app/api
+    description: Production (Vercel)
+  - url: http://localhost:8000/api
+    description: Local development
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        profilePic:
+          type: string
+
+    Clue:
+      type: object
+      properties:
+        _id:
+          type: string
+        text:
+          type: string
+        image:
+          type: string
+        audio:
+          type: string
+        discovered:
+          type: boolean
+          default: false
+
+    Hint:
+      type: object
+      required: [level, text]
+      properties:
+        _id:
+          type: string
+        level:
+          type: integer
+        text:
+          type: string
+        penaltyScore:
+          type: number
+
+    MediaAsset:
+      type: object
+      required: [type, url]
+      properties:
+        type:
+          type: string
+          enum: [image, audio, video]
+        url:
+          type: string
+
+    Solution:
+      type: object
+      required: [answer]
+      properties:
+        answer:
+          type: string
+        caseSensitive:
+          type: boolean
+          default: false
+
+    Validation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [exact, contains, regex, custom]
+          default: exact
+        pattern:
+          type: string
+
+    ScoreRule:
+      type: object
+      properties:
+        baseScore:
+          type: number
+          default: 100
+        timeBonusPerSecond:
+          type: number
+        hintPenalty:
+          type: number
+
+    Puzzle:
+      type: object
+      required: [title, description, type, difficulty, expectedSolution, validation]
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        storyContext:
+          type: string
+        type:
+          type: string
+          enum:
+            - code
+            - riddle
+            - cipher
+            - physical
+            - gps
+            - audio
+            - image
+            - sequence
+            - logic
+            - qr
+            - augmented-reality
+        difficulty:
+          type: string
+          enum: [easy, medium, hard, expert]
+        status:
+          type: string
+          enum: [draft, active, archived]
+          default: draft
+        clues:
+          type: array
+          items:
+            $ref: "#/components/schemas/Clue"
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/Hint"
+        expectedSolution:
+          $ref: "#/components/schemas/Solution"
+        timeLimit:
+          type: number
+          description: Time limit in seconds
+        media:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaAsset"
+        validation:
+          $ref: "#/components/schemas/Validation"
+        scoring:
+          $ref: "#/components/schemas/ScoreRule"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+paths:
+  # ─── Admin ───────────────────────────────────────────────
+  /admin/login:
+    post:
+      tags: [Admin]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  example: admin@gmail.com
+                password:
+                  type: string
+                  example: admin123
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  adminToken:
+                    type: string
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/allUsers:
+    get:
+      tags: [Admin]
+      summary: Get all users
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  allUsers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/addUser:
+    post:
+      tags: [Admin]
+      summary: Create a new user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  userData:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/edituser/{_id}:
+    put:
+      tags: [Admin]
+      summary: Edit a user's name
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        "200":
+          description: User edited
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/deleteuser/{_id}:
+    delete:
+      tags: [Admin]
+      summary: Delete a user
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ─── User ────────────────────────────────────────────────
+  /user/login:
+    post:
+      tags: [User]
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userData:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /user/signup:
+    post:
+      tags: [User]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  userData:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /user/addImage:
+    post:
+      tags: [User]
+      summary: Add profile picture
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, url]
+              properties:
+                email:
+                  type: string
+                url:
+                  type: string
+                  description: Cloudinary image URL
+      responses:
+        "200":
+          description: Image added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updatedUser:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ─── Puzzle ──────────────────────────────────────────────
+  /puzzle:
+    get:
+      tags: [Puzzle]
+      summary: Get all puzzles
+      description: Returns all puzzles, optionally filtered by type, difficulty, or status.
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - code
+              - riddle
+              - cipher
+              - physical
+              - gps
+              - audio
+              - image
+              - sequence
+              - logic
+              - qr
+              - augmented-reality
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+            enum: [easy, medium, hard, expert]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, active, archived]
+      responses:
+        "200":
+          description: List of puzzles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Puzzle"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      tags: [Puzzle]
+      summary: Create a new puzzle
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Puzzle"
+            example:
+              title: The Hidden Code
+              description: Decode the secret message
+              type: cipher
+              difficulty: medium
+              clues:
+                - text: Look at the first letters
+              hints:
+                - level: 1
+                  text: It's an acrostic
+                  penaltyScore: 10
+              expectedSolution:
+                answer: HELLO
+                caseSensitive: false
+              validation:
+                type: exact
+              scoring:
+                baseScore: 100
+                hintPenalty: 10
+      responses:
+        "201":
+          description: Puzzle created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Puzzle"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /puzzle/{id}:
+    get:
+      tags: [Puzzle]
+      summary: Get a puzzle by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Puzzle details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Puzzle"
+        "404":
+          description: Puzzle not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      tags: [Puzzle]
+      summary: Update a puzzle
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Puzzle"
+      responses:
+        "200":
+          description: Puzzle updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Puzzle"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Puzzle not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags: [Puzzle]
+      summary: Delete a puzzle
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Puzzle deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Puzzle not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
