@@ -49,7 +49,7 @@ const AdminDashboard = () => {
           </div>
           <div style={cardStyle}>
             <h4 style={cardTitle}>📍 Investigation Sites</h4>
-            <p style={cardDesc}>Manage investigation locations</p>
+            <p style={cardDesc}>Manage sites</p>
             <Button onClick={() => navigate("/admin/investigation-sites")}>Go</Button>
           </div>
           <div style={cardStyle}>
